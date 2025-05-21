@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MvcMovie.Data;
+using MvcMovie.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Register DbContext **once**, conditionally based on environment
 if (builder.Environment.IsDevelopment())
@@ -26,6 +28,12 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
+}
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    SeedData.Initialize(services);
 }
 
 app.UseHttpsRedirection();
